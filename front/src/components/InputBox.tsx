@@ -27,7 +27,7 @@ const InputBox: React.FC<InputBoxProps> = ({ setCity }) => {
     <>
       <div className="relative w-full">
         <input
-          className={`w-full pl-10 lg:pl-14 pr-1 py-1 border-black border-solid rounded-lg border-2 outline-none ${
+          className={`cityinput w-full pl-10 lg:pl-14 pr-1 py-1 border-black border-solid rounded-lg border-2 outline-none ${
             isCitySelected ? "font-bold" : ""
           } lg:text-xl`}
           type="text"

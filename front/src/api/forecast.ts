@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { apiBase, ForecastData } from "./defs";
 
 function useForecast(slug: string, start: string, end: string): ForecastData[] {
-  const endPoint = `${apiBase}/forecastere`;
+  const endPoint = `${apiBase}/forecaster`;
   const pLocation = `location=${slug}`;
   const pStart = `start=${start}`;
   const pEnd = `end=${end}`;

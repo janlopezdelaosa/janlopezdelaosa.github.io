@@ -11,5 +11,8 @@
   ],
   "scripts": {
     "start": "node back/index.js"
+  },
+  "devDependencies": {
+    "eslint-plugin-cypress": "^2.11.2"
   }
 }
