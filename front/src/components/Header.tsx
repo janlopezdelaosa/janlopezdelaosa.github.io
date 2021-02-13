@@ -10,7 +10,7 @@ const Header: React.FC<HeaderProps> = () => {
         Weather Forecaster
       </h2>
       <p className="text-xs lg:text-lg">
-        {dayjs().format("MMMM D, YYYY | hh:mm")}
+        {dayjs().format("MMMM D, YYYY | HH:mm")}
       </p>
     </div>
   );
