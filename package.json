@@ -1,0 +1,15 @@
+{
+  "name": "monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "npm": "7.5.x"
+  },
+  "workspaces": [
+    "./front",
+    "./back"
+  ],
+  "scripts": {
+    "start": "node back/index.js"
+  }
+}
