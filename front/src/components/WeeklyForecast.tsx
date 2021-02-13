@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DateSummaryForecast from "./DateSummaryForecast";
-import useForecast from "../utils/useForecast";
+import useForecast from "../api/forecast";
 import DateHourlyForecast from "./DateHourlyForecast";
 
 interface WeeklyForecastProps {

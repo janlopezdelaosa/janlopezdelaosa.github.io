@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useLocations from "../utils/useLocations";
+import useLocations from "../api/locations";
 import Search from "../svg/Search";
 import Cross from "../svg/Cross";
 

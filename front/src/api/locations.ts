@@ -1,19 +1,20 @@
+import { useQuery } from "react-query";
 import { apiBase, LocationData } from "./defs";
 
-const fetchForecast = async (): Promise<LocationData[] | void> => {
+function useLocations(): LocationData[] {
   const endPoint = `${apiBase}/locations`;
 
-  try {
-    const res = await fetch(endPoint);
-    const data = await res.json();
-    if (!res.ok) {
-      console.log(data.msg);
+  const query = useQuery("locations", async () => {
+    const response = await fetch(endPoint);
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.msg);
     } else {
-      return data;
+      return response.json();
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  });
 
-export default fetchForecast;
+  return query.data;
+}
+
+export default useLocations;
