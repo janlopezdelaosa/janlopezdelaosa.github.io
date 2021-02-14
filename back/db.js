@@ -1,4 +1,7 @@
 var firebase = require("firebase");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 firebase.initializeApp({
   serviceAccount: {
