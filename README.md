@@ -1,7 +1,7 @@
 # Weather Forecast
 
 Live demo: https://janlopezdelaosa.github.io
-[API reference](../back\API.md)
+[API reference](./back/API.md)
 
 ## Run locally
 
