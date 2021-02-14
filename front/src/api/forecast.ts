@@ -6,17 +6,27 @@ function useForecast(slug: string, start: string, end: string): ForecastData[] {
   const pLocation = `location=${slug}`;
   const pStart = `start=${start}`;
   const pEnd = `end=${end}`;
+  const refetchInterval = 5000;
 
-  const query = useQuery(["forecast", slug, start, end], async () => {
-    const response = await fetch(`${endPoint}?${pLocation}&${pStart}&${pEnd}`);
+  const query = useQuery(
+    ["forecast", slug, start, end],
+    async () => {
+      console.log("refetching");
+      const response = await fetch(
+        `${endPoint}?${pLocation}&${pStart}&${pEnd}`
+      );
 
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.msg);
-    } else {
-      return response.json();
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.msg);
+      } else {
+        return response.json();
+      }
+    },
+    {
+      refetchInterval,
     }
-  });
+  );
 
   return query.data;
 }

@@ -29,6 +29,12 @@ const WeeklyForecast: React.FC<WeeklyForecastProps> = ({ city, days = 5 }) => {
 
   const [selected, setSelected] = useState(-1);
 
+  useEffect(() => {
+    if (selected !== -1) {
+      setHourly(forecast[selected]?.hourly);
+    }
+  }, [forecast, selected]);
+
   return (
     <>
       <div className="p-2 md:p-4 flex flex-wrap flex-row justify-center">

@@ -65,7 +65,7 @@ Developed with React, Typescript and TailwindCSS and deployed to GitHubPages.
 
 Packages:
 
-- React. Interactive UI.
+- [React]. Interactive UI.
 - Typescript. Static type definition for JavaScript.
 - TailwindCSS. Responsive design for mobile and desktop.
 - ReactQuery. Cache queries and enable suspense components on fetch.
@@ -77,7 +77,8 @@ Features:
 - The app checks user's input against the retrieved values.
 - Input is debounced to relieve some computation.
 - Input box and hourly forecast components suspense on data fetching.
-- Data fetching is cached.
+- Fetched data is cached.
+- Data changes are reflected on the fronted after 5 seconds.
 
 ### Backend
 
@@ -92,3 +93,5 @@ Types, syntax and format with TypeScript, ESLint and Prettier. Project requireme
 ### Browser compatibility
 
 Responsive design with TailwindCSS. Browser supported features with caniuse.com.
+
+[react]: https://es.reactjs.org/
