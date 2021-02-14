@@ -93,95 +93,97 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", (req, res) => {
-  let missingFields = [];
+router.post("/", (req, res, next) => {
+  try {
+    let missingFields = [];
 
-  const name = req.body.name;
-  if (!name) {
-    missingFields.push("name");
-  }
+    const name = req.body.name;
+    if (!name) {
+      missingFields.push("name");
+    }
 
-  const country = req.body.country;
-  if (!country) {
-    missingFields.push("country");
-  }
+    const country = req.body.country;
+    if (!country) {
+      missingFields.push("country");
+    }
 
-  const slug = req.body.slug;
-  if (!slug) {
-    missingFields.push("slug");
-  }
+    const slug = req.body.slug;
+    if (!slug) {
+      missingFields.push("slug");
+    }
 
-  if (missingFields.length > 0) {
-    res.status(400);
-    res.send({ msg: missingFields.toString() + " fields missing" });
-  } else {
-    const cityData = {
-      name,
-      country,
-      slug,
-    };
+    if (missingFields.length > 0) {
+      res.status(400);
+      res.send({ msg: missingFields.toString() + " fields missing" });
+    } else {
+      const cityData = {
+        name,
+        country,
+        slug,
+      };
 
-    const dbCities = db.ref("/locations");
+      const dbCities = db.ref("/locations");
 
-    dbCities
-      .orderByChild("name")
-      .equalTo(name)
-      .once("value", (snapshot) => {
-        let sameCity = false;
-        let sameCountry = false;
-        if (snapshot.exists()) {
-          sameCity = true;
-          snapshot.forEach((childSnapshot) => {
-            const childData = childSnapshot.val();
-            sameCountry = sameCountry || childData.country === country;
-          });
-        }
-
-        if (sameCity && sameCountry) {
-          res.status(400);
-          res.send({
-            msg: name + ", " + country + " already exists in the BD",
-          });
-        } else {
-          dbCities
-            .orderByChild("slug")
-            .equalTo(slug)
-            .once("value", (snapshot) => {
-              if (snapshot.exists()) {
-                res.status(400);
-                res.send({
-                  msg: slug + " already exists in the BD",
-                });
-              } else {
-                const newCityID = dbCities.push().key;
-
-                let newCitiesEntry = {};
-                newCitiesEntry[newCityID] = cityData;
-
-                dbCities.update(newCitiesEntry);
-
-                res.status(201);
-                res.send(cityData);
-              }
+      dbCities
+        .orderByChild("name")
+        .equalTo(name)
+        .once("value", (snapshot) => {
+          let sameCity = false;
+          let sameCountry = false;
+          if (snapshot.exists()) {
+            sameCity = true;
+            snapshot.forEach((childSnapshot) => {
+              const childData = childSnapshot.val();
+              sameCountry = sameCountry || childData.country === country;
             });
-        }
-      });
+          }
+
+          if (sameCity && sameCountry) {
+            res.status(400);
+            res.send({
+              msg: name + ", " + country + " already exists in the BD",
+            });
+          } else {
+            dbCities
+              .orderByChild("slug")
+              .equalTo(slug)
+              .once("value", (snapshot) => {
+                if (snapshot.exists()) {
+                  res.status(400);
+                  res.send({
+                    msg: slug + " already exists in the BD",
+                  });
+                } else {
+                  const newCityID = dbCities.push().key;
+
+                  let newCitiesEntry = {};
+                  newCitiesEntry[newCityID] = cityData;
+
+                  dbCities.update(newCitiesEntry);
+
+                  res.status(201);
+                  res.send(cityData);
+                }
+              });
+          }
+        });
+    }
+  } catch (error) {
+    return next(error);
   }
 });
 
-router.delete("/", (req, res) => {
-  const dbLocations = db.ref("/locations");
+router.delete("/", (req, res, next) => {
+  try {
+    const dbLocations = db.ref("/locations");
 
-  dbLocations
-    .remove()
-    .then(() => {
+    dbLocations.remove().then(() => {
       res.status(200);
       res.send("All locations data deleted from /locations");
-    })
-    .catch(() => {
-      res.status(500);
-      res.send("Location data couldn't be deleted from /locations");
     });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;

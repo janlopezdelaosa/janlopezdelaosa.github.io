@@ -55,7 +55,7 @@ Consider this sketch of the repo structure:
 /package.json
 ```
 
-- With `npm 7` adding support for workspaces, `npm install` from root folder installs dependencies and keeps track of the shared ones.
+- With `npm 7` adding support for [workspaces], `npm install` from root folder installs dependencies and keeps track of the shared ones.
 
 - The `/docs` folder doesn't contain any documentation but the Web App build itself. GitHub Pages allows to serve content from either / (root) or (/docs). The name is misleading but just redirecting frontend build's output to /docs results in a better development workflow. Pushing the repo also deploys the website.
 
@@ -66,9 +66,9 @@ Developed with React, Typescript and TailwindCSS and deployed to GitHubPages.
 Packages:
 
 - [React]. Interactive UI.
-- Typescript. Static type definition for JavaScript.
-- TailwindCSS. Responsive design for mobile and desktop.
-- ReactQuery. Cache queries and enable suspense components on fetch.
+- [Typescript]. Static type definition for JavaScript.
+- [TailwindCSS]. Responsive design for mobile and desktop.
+- [ReactQuery]. Cache queries and enable suspense components on fetch.
 
 Features:
 
@@ -82,18 +82,25 @@ Features:
 
 ### Backend
 
-Developed with Express, deployed to Heroku and connected to a RealTime Database in Google Firebase.
+Developed with [Express], deployed to [Heroku] and connected to a RealTime Database in Google [Firebase].
 
 ## Others
 
 ### Quality assurance
 
-Types, syntax and format with TypeScript, ESLint and Prettier. Response to basic inputs checked with Cypress.
+Types, syntax and format with TypeScript, ESLint and Prettier. Response to basic inputs checked with [Cypress].
 
 ### Browser compatibility
 
 Responsive design with TailwindCSS. Browser supported features with [caniuse].
 
 [react]: https://es.reactjs.org/
-
-[caniuse] : http://caniuse.com/
+[typescript]: https://www.typescriptlang.org/
+[tailwindcss]: https://tailwindcss.com/
+[reactquery]: https://react-query.tanstack.com/
+[express]: https://expressjs.com/es/
+[heroku]: https://www.heroku.com/
+[firebase]: https://firebase.google.com/
+[cypress]: https://www.cypress.io/
+[caniuse]: http://caniuse.com/
+[workspaces]: https://docs.npmjs.com/cli/v7/using-npm/workspaces

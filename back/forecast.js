@@ -89,140 +89,144 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", (req, res) => {
-  let missingFields = [];
+router.post("/", (req, res, next) => {
+  try {
+    let missingFields = [];
 
-  const locationSlug = req.body.locationSlug;
-  if (!locationSlug) {
-    missingFields.push("locationSlug");
-  }
+    const locationSlug = req.body.locationSlug;
+    if (!locationSlug) {
+      missingFields.push("locationSlug");
+    }
 
-  const date = req.body.date;
-  if (!date) {
-    missingFields.push("date");
-  }
+    const date = req.body.date;
+    if (!date) {
+      missingFields.push("date");
+    }
 
-  const hourly = req.body.hourly;
-  if (!hourly) {
-    missingFields.push("hourly");
-  }
+    const hourly = req.body.hourly;
+    if (!hourly) {
+      missingFields.push("hourly");
+    }
 
-  if (missingFields.length > 0) {
-    res.status(400);
-    res.send({ msg: missingFields.toString() + " fields missing" });
-  } else {
-    const forecastData = {
-      locationSlug,
-      date,
-      hourly,
-    };
+    if (missingFields.length > 0) {
+      res.status(400);
+      res.send({ msg: missingFields.toString() + " fields missing" });
+    } else {
+      const forecastData = {
+        locationSlug,
+        date,
+        hourly,
+      };
 
-    const dbLocations = db.ref("/locations");
+      const dbLocations = db.ref("/locations");
 
-    dbLocations
-      .orderByChild("slug")
-      .equalTo(locationSlug)
-      .once("value", (snapshot) => {
-        if (!snapshot.exists()) {
-          res.status(400);
-          res.send({
-            msg:
-              "A location with slug " + locationSlug + " must exist in the BD",
-          });
-        } else {
-          const dateStr = date;
-          const dateDate = new Date(dateStr);
-          const dateTime = dateDate.getTime();
-          if (!utils.isValidDate(dateStr) || isNaN(dateTime)) {
+      dbLocations
+        .orderByChild("slug")
+        .equalTo(locationSlug)
+        .once("value", (snapshot) => {
+          if (!snapshot.exists()) {
             res.status(400);
             res.send({
-              msg: dateStr + " is not a valid date, use yyyy-mm-dd format",
+              msg:
+                "A location with slug " +
+                locationSlug +
+                " must exist in the BD",
             });
           } else {
-            const dbForecast = db.ref("/forecast");
+            const dateStr = date;
+            const dateDate = new Date(dateStr);
+            const dateTime = dateDate.getTime();
+            if (!utils.isValidDate(dateStr) || isNaN(dateTime)) {
+              res.status(400);
+              res.send({
+                msg: dateStr + " is not a valid date, use yyyy-mm-dd format",
+              });
+            } else {
+              const dbForecast = db.ref("/forecast");
 
-            dbForecast
-              .orderByChild("locationSlug")
-              .equalTo(locationSlug)
-              .once("value", (snapshot) => {
-                let sameSlug = false;
-                let sameDate = false;
-                if (snapshot.exists()) {
-                  sameSlug = true;
-                  snapshot.forEach((childSnapshot) => {
-                    const childData = childSnapshot.val();
-                    sameDate = sameDate || childData.date === date;
-                  });
-                }
-
-                if (sameSlug && sameDate) {
-                  res.status(400);
-                  res.send({
-                    msg:
-                      "A forecast for " +
-                      locationSlug +
-                      ", " +
-                      date +
-                      " already exists in the BD",
-                  });
-                } else {
-                  if (!Array.isArray(hourly)) {
-                    res.status(400);
-                    res.send({
-                      msg: "Field hourly must be an array",
+              dbForecast
+                .orderByChild("locationSlug")
+                .equalTo(locationSlug)
+                .once("value", (snapshot) => {
+                  let sameSlug = false;
+                  let sameDate = false;
+                  if (snapshot.exists()) {
+                    sameSlug = true;
+                    snapshot.forEach((childSnapshot) => {
+                      const childData = childSnapshot.val();
+                      sameDate = sameDate || childData.date === date;
                     });
-                  } else if (hourly.length !== 24) {
+                  }
+
+                  if (sameSlug && sameDate) {
                     res.status(400);
                     res.send({
                       msg:
-                        "Field hourly has " +
-                        hourly.length +
-                        " items but must have 24",
+                        "A forecast for " +
+                        locationSlug +
+                        ", " +
+                        date +
+                        " already exists in the BD",
                     });
                   } else {
-                    const allItemsAreNumber = hourly.reduce(
-                      (prev, curr, idx) => prev && !isNaN(curr),
-                      true
-                    );
-
-                    if (!allItemsAreNumber) {
+                    if (!Array.isArray(hourly)) {
                       res.status(400);
                       res.send({
-                        msg: "All forecast items must be a number",
+                        msg: "Field hourly must be an array",
+                      });
+                    } else if (hourly.length !== 24) {
+                      res.status(400);
+                      res.send({
+                        msg:
+                          "Field hourly has " +
+                          hourly.length +
+                          " items but must have 24",
                       });
                     } else {
-                      const newForecastID = dbForecast.push().key;
+                      const allItemsAreNumber = hourly.reduce(
+                        (prev, curr, idx) => prev && !isNaN(curr),
+                        true
+                      );
 
-                      let newForecastEntry = {};
-                      newForecastEntry[newForecastID] = forecastData;
+                      if (!allItemsAreNumber) {
+                        res.status(400);
+                        res.send({
+                          msg: "All forecast items must be a number",
+                        });
+                      } else {
+                        const newForecastID = dbForecast.push().key;
 
-                      dbForecast.update(newForecastEntry);
+                        let newForecastEntry = {};
+                        newForecastEntry[newForecastID] = forecastData;
 
-                      res.status(201);
-                      res.send(forecastData);
+                        dbForecast.update(newForecastEntry);
+
+                        res.status(201);
+                        res.send(forecastData);
+                      }
                     }
                   }
-                }
-              });
+                });
+            }
           }
-        }
-      });
+        });
+    }
+  } catch (error) {
+    return next(error);
   }
 });
 
-router.delete("/", (req, res) => {
-  const dbForecast = db.ref("/forecast");
+router.delete("/", (req, res, next) => {
+  try {
+    const dbForecast = db.ref("/forecast");
 
-  dbForecast
-    .remove()
-    .then(() => {
+    dbForecast.remove().then(() => {
       res.status(200);
       res.send("All forecast data deleted from /forecast");
-    })
-    .catch(() => {
-      res.status(500);
-      res.send("Forecast data couldn't be deleted from /forecast");
     });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;
