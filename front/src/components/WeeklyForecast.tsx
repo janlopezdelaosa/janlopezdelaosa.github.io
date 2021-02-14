@@ -11,13 +11,11 @@ interface WeeklyForecastProps {
 
 const WeeklyForecast: React.FC<WeeklyForecastProps> = ({ city, days = 5 }) => {
   const now = new Date();
-  console.log(now.toISOString());
   const today = new Date(
     Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
   );
 
   const startDate = today;
-  console.log(startDate.toISOString());
   // ISO format example 2021-02-11T18:45:55.136Z
   const startStr = startDate.toISOString().split("T")[0];
 
@@ -30,12 +28,6 @@ const WeeklyForecast: React.FC<WeeklyForecastProps> = ({ city, days = 5 }) => {
   const [hourly, setHourly] = useState<number[]>([]);
 
   const [selected, setSelected] = useState(-1);
-
-  useEffect(() => {
-    if (forecast.length > 0 && forecast.length < days) {
-      console.log("missing info");
-    }
-  }, [forecast, days]);
 
   return (
     <>

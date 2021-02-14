@@ -76,7 +76,7 @@ const InputBox: React.FC<InputBoxProps> = ({ setCity }) => {
             ))}
         </datalist>
 
-        {debouncedTerm && !isCitySelected && (
+        {!isCitySelected && term && (
           <NoData
             message={`Location "${debouncedTerm}" doesn't exist in our database.`}
           />

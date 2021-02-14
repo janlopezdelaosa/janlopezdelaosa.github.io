@@ -11,7 +11,7 @@ const NoData: React.FC<NoDataProps> = ({
 }) => {
   return (
     <div className="p-4 md:p-6 self-center text-center">
-      <p>{message}</p>
+      <p data-cy="msg">{message}</p>
       <p>{suggestion}</p>
     </div>
   );
