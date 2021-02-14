@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import useLocations from "../api/locations";
-import Search from "../svg/Search";
-import Cross from "../svg/Cross";
 import { LocationData } from "../api/defs";
+import useLocations from "../api/locations";
 import useDebounce from "../utils/useDebounce";
 import NoData from "./NoData";
+import Search from "../svg/Search";
+import Cross from "../svg/Cross";
 
 interface InputBoxProps {
   setCity: React.Dispatch<React.SetStateAction<string>>;

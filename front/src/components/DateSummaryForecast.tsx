@@ -20,7 +20,7 @@ const DateSummaryForecast: React.FC<DateSummaryForecastProps> = ({
     <button
       className={`p-4 md:p-6 m-2 md:m-4 flex flex-col items-center border-black border-solid rounded-lg border-2 outline-none transform hover:scale-105${
         isSelected ? " font-bold" : ""
-      }`}
+      } focus:outline-none`}
       data-cy="summary"
       onClick={onClick}
     >

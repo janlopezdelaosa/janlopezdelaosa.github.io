@@ -1,16 +1,16 @@
-var express = require("express");
-var router = express.Router();
-var db = require("./db.js");
+const express = require("express");
+const router = express.Router();
+const db = require("./db.js");
 
 router.get("/", async (req, res, next) => {
   try {
     const dbCities = db.ref("/locations");
 
-    var retrievedData;
+    let retrievedData;
     if (!req.query.filter) {
       retrievedData = await dbCities.once("value");
     } else {
-      var numFields = Object.keys(req.query.filter).length;
+      let numFields = Object.keys(req.query.filter).length;
       if (numFields === 0) {
         res.status(400);
         res.send({ msg: "You need to specify a field to filter by" });
@@ -35,18 +35,14 @@ router.get("/", async (req, res, next) => {
       }
     }
 
-    var orderedData = [];
+    let orderedData = [];
 
     retrievedData.forEach((childSnapshot) => {
       orderedData.push({
         ...childSnapshot.val(),
-        //id: childSnapshot.key,
       });
     });
 
-    // if (!req.query.order) {
-    //   orderedData = retrievedData.val();
-    // } else {
     if (req.query.order) {
       numFields = Object.keys(req.query.order).length;
       if (numFields === 0) {
@@ -76,15 +72,6 @@ router.get("/", async (req, res, next) => {
           } else {
             const isAscending = req.query.order[orderField] === "ASC";
 
-            // const list = [];
-
-            // retrievedData.forEach((childSnapshot) => {
-            //   list.push({
-            //     ...childSnapshot.val(),
-            //     //id: childSnapshot.key,
-            //   });
-            // });
-
             orderedData.sort((a, b) =>
               a[orderField] < b[orderField]
                 ? isAscending
@@ -96,17 +83,6 @@ router.get("/", async (req, res, next) => {
                   : -1
                 : 0
             );
-
-            // var orderedSnapshot = {};
-            // list.forEach((c) => {
-            //   const country = c.country;
-            //   const name = c.name;
-            //   const slug = c.slug;
-            //   orderedSnapshot[c.id] = { country, name, slug };
-            // });
-
-            //orderedData = orderedSnapshot;
-            // orderedData = list;
           }
         }
       }
@@ -119,9 +95,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", (req, res) => {
-  console.log(req.body);
-
-  var missingFields = [];
+  let missingFields = [];
 
   const name = req.body.name;
   if (!name) {
@@ -154,8 +128,8 @@ router.post("/", (req, res) => {
       .orderByChild("name")
       .equalTo(name)
       .once("value", (snapshot) => {
-        var sameCity = false;
-        var sameCountry = false;
+        let sameCity = false;
+        let sameCountry = false;
         if (snapshot.exists()) {
           sameCity = true;
           snapshot.forEach((childSnapshot) => {
@@ -182,16 +156,15 @@ router.post("/", (req, res) => {
                   msg: slug + " already exists in the BD",
                 });
               } else {
-                var newCityID = dbCities.push().key;
+                const newCityID = dbCities.push().key;
 
-                var newCitiesEntry = {};
+                let newCitiesEntry = {};
                 newCitiesEntry[newCityID] = cityData;
 
                 dbCities.update(newCitiesEntry);
 
                 res.status(200);
                 res.send(cityData);
-                // res.send({ ...cityData, newCityID });
                 console.log("insert in BD");
               }
             });

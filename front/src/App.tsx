@@ -1,9 +1,9 @@
 import React, { Suspense, useState } from "react";
-import Footer from "./components/Footer";
+import { QueryClient, QueryClientProvider } from "react-query";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import InputBox from "./components/InputBox";
 import WeeklyForecast from "./components/WeeklyForecast";
-import { QueryClient, QueryClientProvider } from "react-query";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Loading from "./components/Loading";
 

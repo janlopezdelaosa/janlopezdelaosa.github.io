@@ -1,102 +1,15 @@
-var express = require("express");
-var router = express.Router();
-var db = require("./db.js");
+const express = require("express");
+const router = express.Router();
+const db = require("./db.js");
 
-var utils = require("./utils.js");
-// router.get("/", async (req, res, next) => {
-//   console.log(req.query);
-//   try {
-//     const dbForecast = db.ref("/forecast");
-
-//     var retrievedData;
-//     if (!req.query.location) {
-//       retrievedData = await dbForecast.once("value");
-//     } else {
-//       const location = req.query.location;
-//       console.log(location);
-//       retrievedData = await dbForecast
-//         .orderByChild("/locationSlug")
-//         .equalTo(location)
-//         .once("value");
-//     }
-
-//     const list = [];
-
-//     retrievedData.forEach((childSnapshot) => {
-//       list.push({
-//         ...childSnapshot.val(),
-//         id: childSnapshot.key,
-//       });
-//     });
-
-//     console.log(list);
-
-//     var startDate;
-//     //var startingStr;
-//     if (!req.query.date) {
-//       const now = new Date();
-//       const today = new Date(
-//         now.getFullYear(),
-//         now.getMonth(),
-//         now.getDate(),
-//         0,
-//         0,
-//         0
-//       );
-//       startDate = today;
-//       // ISO format example 2021-02-11T18:45:55.136Z
-//       //startingStr = startingDate.toISOString().split("T")[0];
-//     } else {
-//       const startingStr = req.query.date;
-//       // TODO: Check that startingStr is a correct string
-//       startDate = new Date(startingStr);
-//     }
-//     //console.log("(str): " + startingStr); // + "\n(date): " + startingDate);
-
-//     var finishDate = new Date(startDate);
-//     var days = req.query.days ? Number(req.query.days) : 1;
-//     // TODO: Check that days is a correct string
-//     finishDate.setDate(finishDate.getDate() + days);
-//     //var finishStr = finishDate.toISOString().split("T")[0];
-//     //console.log("(str): " + finishStr); //+ "\n(date): " + finishDate);
-
-//     const startTime = startDate.getTime();
-//     const finishTime = finishDate.getTime();
-//     var filteredList = list.filter((fc) => {
-//       const forecastTime = new Date(fc.date).getTime();
-//       //   const r1 = fcD.getTime() >= startingDate.getTime();
-//       //   console.log(
-//       //     "is " + fcD.getTime() + " >= " + startingDate.getTime() + " ?" + r1
-//       //   );
-//       //   const r2 = fcD.getTime() <= finishDate.getTime();
-
-//       //   console.log(
-//       //     "is " + fcD.getTime() + " <= " + finishDate.getTime() + " ?" + r2
-//       //   );
-//       return forecastTime >= startTime && forecastTime <= finishTime;
-//     });
-
-//     var filteredSnapshot = {};
-//     filteredList.forEach((c) => {
-//       const locationSlug = c.locationSlug;
-//       const date = c.date;
-//       //   const forecast = c.forecast;
-//       filteredSnapshot[c.id] = { locationSlug, date };
-//     });
-
-//     res.status(200);
-//     res.send(filteredSnapshot);
-//   } catch (error) {
-//     return next(error);
-//   }
-// });
+const utils = require("./utils.js");
 
 router.get("/", async (req, res, next) => {
   console.log(req.query);
   try {
     const dbForecast = db.ref("/forecast");
 
-    var retrievedData = [];
+    let retrievedData = [];
     if (!req.query.location) {
       retrievedData = await dbForecast.once("value");
     } else {
@@ -125,15 +38,12 @@ router.get("/", async (req, res, next) => {
     retrievedData.forEach((childSnapshot) => {
       list.push({
         ...childSnapshot.val(),
-        //id: childSnapshot.key,
       });
     });
 
-    console.log(list);
-
-    var isGreaterOrEqualThanStart;
+    let isGreaterOrEqualThanStart;
     if (!req.query.start) {
-      isGreaterOrEqualThanStart = (fcT, sdT) => true;
+      isGreaterOrEqualThanStart = () => true;
     } else {
       const startStr = req.query.start;
       const startDate = new Date(startStr);
@@ -148,9 +58,9 @@ router.get("/", async (req, res, next) => {
       }
     }
 
-    var isLessOrEqualThanEnd;
+    let isLessOrEqualThanEnd;
     if (!req.query.end) {
-      isLessOrEqualThanEnd = (fcT, sdT) => true;
+      isLessOrEqualThanEnd = () => true;
     } else {
       const endStr = req.query.end;
       const endDate = new Date(endStr);
@@ -165,7 +75,7 @@ router.get("/", async (req, res, next) => {
       }
     }
 
-    var filteredList = list.filter((fc) => {
+    const filteredList = list.filter((fc) => {
       const forecastTime = new Date(fc.date).getTime();
       return (
         isGreaterOrEqualThanStart(forecastTime) &&
@@ -173,16 +83,7 @@ router.get("/", async (req, res, next) => {
       );
     });
 
-    // var filteredSnapshot = {};
-    // filteredList.forEach((c) => {
-    //   const locationSlug = c.locationSlug;
-    //   const date = c.date;
-    //   //   const forecast = c.forecast;
-    //   filteredSnapshot[c.id] = { locationSlug, date };
-    // });
-
     res.status(200);
-    // res.send(filteredSnapshot);
     res.send(filteredList);
   } catch (error) {
     return next(error);
@@ -190,9 +91,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", (req, res) => {
-  console.log(req.body);
-
-  var missingFields = [];
+  let missingFields = [];
 
   const locationSlug = req.body.locationSlug;
   if (!locationSlug) {
@@ -247,8 +146,8 @@ router.post("/", (req, res) => {
               .orderByChild("locationSlug")
               .equalTo(locationSlug)
               .once("value", (snapshot) => {
-                var sameSlug = false;
-                var sameDate = false;
+                let sameSlug = false;
+                let sameDate = false;
                 if (snapshot.exists()) {
                   sameSlug = true;
                   snapshot.forEach((childSnapshot) => {
@@ -293,16 +192,15 @@ router.post("/", (req, res) => {
                         msg: "All forecast items must be a number",
                       });
                     } else {
-                      var newForecastID = dbForecast.push().key;
+                      const newForecastID = dbForecast.push().key;
 
-                      var newForecastEntry = {};
+                      let newForecastEntry = {};
                       newForecastEntry[newForecastID] = forecastData;
 
                       dbForecast.update(newForecastEntry);
 
                       res.status(200);
                       res.send(forecastData);
-                      //res.send({ ...forecastData, newForecastID });
                       console.log("insert in BD");
                     }
                   }

@@ -8,11 +8,10 @@ const DateHourlyForecast: React.FC<DateHourlyForecastProps> = ({ hourly }) => {
   const [selected, setSelected] = useState(-1);
 
   return (
-    // <div className="flex flex-col items-center">
     <div className="pt-8 grid grid-cols-2 md:grid-cols-6 grid-rows-12 md:grid-rows-4 grid-flow-col gap-y-2 md:gap-y-10 gap-x-12">
       {hourly?.map((d, i) => (
         <button
-          className="flex flex-row items-center"
+          className="flex flex-row items-center focus:outline-none"
           data-cy="hourly"
           key={i}
           onClick={() => setSelected(i)}
