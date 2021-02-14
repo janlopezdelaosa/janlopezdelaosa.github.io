@@ -88,10 +88,12 @@ Developed with Express, deployed to Heroku and connected to a RealTime Database 
 
 ### Quality assurance
 
-Types, syntax and format with TypeScript, ESLint and Prettier. Project requirements with Cypress.
+Types, syntax and format with TypeScript, ESLint and Prettier. Response to basic inputs checked with Cypress.
 
 ### Browser compatibility
 
-Responsive design with TailwindCSS. Browser supported features with caniuse.com.
+Responsive design with TailwindCSS. Browser supported features with [caniuse].
 
 [react]: https://es.reactjs.org/
+
+[caniuse] : http://caniuse.com/

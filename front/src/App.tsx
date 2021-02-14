@@ -24,7 +24,7 @@ const App: React.FC = () => {
 
         <div className="p-4 md:px-20 w-full flex justify-center">
           <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading resource="locations" />}>
               <InputBox setCity={setCity} />
             </Suspense>
           </ErrorBoundary>
@@ -33,7 +33,9 @@ const App: React.FC = () => {
 
       <div className="pt-32 pb-16 flex flex-col w-full items-center">
         <ErrorBoundary>
-          <Suspense fallback={<Loading />}>
+          <Suspense
+            fallback={<Loading className="p-8 md:p-14" resource="forecasts" />}
+          >
             {city !== "" && <WeeklyForecast city={city} />}
           </Suspense>
         </ErrorBoundary>

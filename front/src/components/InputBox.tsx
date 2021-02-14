@@ -75,6 +75,7 @@ const InputBox: React.FC<InputBoxProps> = ({ setCity }) => {
 
         {!isCitySelected && term && (
           <NoData
+            className="pt-11 md:pt-12"
             message={`Location "${debouncedTerm}" doesn't exist in our database.`}
           />
         )}
