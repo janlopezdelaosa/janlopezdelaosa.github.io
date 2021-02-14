@@ -7,7 +7,7 @@ function useForecast(slug: string, start: string, end: string): ForecastData[] {
   const pStart = `start=${start}`;
   const pEnd = `end=${end}`;
 
-  const query = useQuery("locations", async () => {
+  const query = useQuery(["forecast", slug, start, end], async () => {
     const response = await fetch(`${endPoint}?${pLocation}&${pStart}&${pEnd}`);
 
     if (!response.ok) {
