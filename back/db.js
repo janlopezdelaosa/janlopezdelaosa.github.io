@@ -1,10 +1,13 @@
 var firebase = require("firebase");
 
 firebase.initializeApp({
-  serviceAccount:
-    "weather-forecast-3359c-firebase-adminsdk-mzu4s-11e6511973.json",
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    private_key: process.env.FIREBASE_PRIVATE_KEY,
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  }),
   databaseURL: "https://weather-forecast-3359c-default-rtdb.firebaseio.com/",
-}); //by adding your credentials, you get authorized to read and write from the database
+});
 
 var db = firebase.database();
 
