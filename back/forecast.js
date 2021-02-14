@@ -5,7 +5,6 @@ const db = require("./db.js");
 const utils = require("./utils.js");
 
 router.get("/", async (req, res, next) => {
-  console.log(req.query);
   try {
     const dbForecast = db.ref("/forecast");
 
@@ -199,9 +198,8 @@ router.post("/", (req, res) => {
 
                       dbForecast.update(newForecastEntry);
 
-                      res.status(200);
+                      res.status(201);
                       res.send(forecastData);
-                      console.log("insert in BD");
                     }
                   }
                 }
@@ -222,7 +220,7 @@ router.delete("/", (req, res) => {
       res.send("All forecast data deleted from /forecast");
     })
     .catch(() => {
-      res.status(400);
+      res.status(500);
       res.send("Forecast data couldn't be deleted from /forecast");
     });
 });

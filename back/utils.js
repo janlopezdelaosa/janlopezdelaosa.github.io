@@ -10,7 +10,6 @@ var isValidDate = (dateString) => {
   var year = parseInt(parts[0], 10);
   var month = parseInt(parts[1], 10);
   var day = parseInt(parts[2], 10);
-  console.log(day + " " + month + " " + year);
   // Check the ranges of month and year
   if (year < 1000 || year > 3000 || month == 0 || month > 12) return false;
 

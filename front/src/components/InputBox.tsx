@@ -69,10 +69,7 @@ const InputBox: React.FC<InputBoxProps> = ({ setCity }) => {
         <datalist id="cities">
           {locations &&
             locations.map((l) => (
-              <option
-                key={l.slug}
-                onMouseOver={() => console.log("Focusing " + l.slug)}
-              >{`${l.name}, ${l.country}`}</option>
+              <option key={l.slug}>{`${l.name}, ${l.country}`}</option>
             ))}
         </datalist>
 

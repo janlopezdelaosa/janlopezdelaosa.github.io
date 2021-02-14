@@ -26,7 +26,6 @@ router.get("/", async (req, res, next) => {
             msg: "Filtering a field by more than one value is not supported",
           });
         } else {
-          console.log(req.query.order);
           retrievedData = await dbCities
             .orderByChild("/" + filterField)
             .equalTo(req.query.filter[filterField])
@@ -139,19 +138,17 @@ router.post("/", (req, res) => {
         }
 
         if (sameCity && sameCountry) {
-          res.status(401);
+          res.status(400);
           res.send({
             msg: name + ", " + country + " already exists in the BD",
           });
         } else {
-          console.log("continue");
           dbCities
             .orderByChild("slug")
             .equalTo(slug)
             .once("value", (snapshot) => {
-              console.log(snapshot.val());
               if (snapshot.exists()) {
-                res.status(401);
+                res.status(400);
                 res.send({
                   msg: slug + " already exists in the BD",
                 });
@@ -163,9 +160,8 @@ router.post("/", (req, res) => {
 
                 dbCities.update(newCitiesEntry);
 
-                res.status(200);
+                res.status(201);
                 res.send(cityData);
-                console.log("insert in BD");
               }
             });
         }
@@ -183,7 +179,7 @@ router.delete("/", (req, res) => {
       res.send("All locations data deleted from /locations");
     })
     .catch(() => {
-      res.status(400);
+      res.status(500);
       res.send("Location data couldn't be deleted from /locations");
     });
 });
