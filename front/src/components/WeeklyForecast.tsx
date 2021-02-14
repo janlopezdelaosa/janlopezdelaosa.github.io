@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateSummaryForecast from "./DateSummaryForecast";
 import useForecast from "../api/forecast";
 import DateHourlyForecast from "./DateHourlyForecast";
+import NoData from "./NoData";
 
 interface WeeklyForecastProps {
   city: string;
@@ -10,27 +11,31 @@ interface WeeklyForecastProps {
 
 const WeeklyForecast: React.FC<WeeklyForecastProps> = ({ city, days = 5 }) => {
   const now = new Date();
+  console.log(now.toISOString());
   const today = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    0,
-    0,
-    0
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
   );
+
   const startDate = today;
+  console.log(startDate.toISOString());
   // ISO format example 2021-02-11T18:45:55.136Z
-  const startingStr = startDate.toISOString().split("T")[0];
+  const startStr = startDate.toISOString().split("T")[0];
 
   let finishDate = new Date(startDate);
   finishDate.setDate(finishDate.getDate() + days);
   const finishStr = finishDate.toISOString().split("T")[0];
 
-  const forecast = useForecast(city, startingStr, finishStr);
+  const forecast = useForecast(city, startStr, finishStr);
 
   const [hourly, setHourly] = useState<number[]>([]);
 
   const [selected, setSelected] = useState(-1);
+
+  useEffect(() => {
+    if (forecast.length > 0 && forecast.length < days) {
+      console.log("missing info");
+    }
+  }, [forecast, days]);
 
   return (
     <>
@@ -54,7 +59,7 @@ const WeeklyForecast: React.FC<WeeklyForecastProps> = ({ city, days = 5 }) => {
             );
           })
         ) : (
-          <p>There is no forecast data for the following 5 days {forecast}</p>
+          <NoData message="No forecast data for any of the following 5 days." />
         )}
       </div>
       {hourly.length !== 0 && <DateHourlyForecast hourly={hourly} />}

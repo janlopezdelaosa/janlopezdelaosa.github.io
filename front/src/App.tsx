@@ -5,6 +5,7 @@ import InputBox from "./components/InputBox";
 import WeeklyForecast from "./components/WeeklyForecast";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Loading from "./components/Loading";
 
 const App: React.FC = () => {
   const [city, setCity] = useState("");
@@ -21,9 +22,9 @@ const App: React.FC = () => {
       <div className="fixed top-0 left-0 right-0 bg-white z-10">
         <Header />
 
-        <div className="py-4 px-4 md:px-20 w-full flex justify-center">
+        <div className="p-4 md:px-20 w-full flex justify-center">
           <ErrorBoundary>
-            <Suspense fallback={<div>loading</div>}>
+            <Suspense fallback={<Loading />}>
               <InputBox setCity={setCity} />
             </Suspense>
           </ErrorBoundary>
@@ -32,7 +33,7 @@ const App: React.FC = () => {
 
       <div className="pt-32 pb-16 flex flex-col w-full items-center">
         <ErrorBoundary>
-          <Suspense fallback={<div>loading</div>}>
+          <Suspense fallback={<Loading />}>
             {city !== "" && <WeeklyForecast city={city} />}
           </Suspense>
         </ErrorBoundary>

@@ -11,8 +11,9 @@ const DateHourlyForecast: React.FC<DateHourlyForecastProps> = ({ hourly }) => {
     // <div className="flex flex-col items-center">
     <div className="pt-8 grid grid-cols-2 md:grid-cols-6 grid-rows-12 md:grid-rows-4 grid-flow-col gap-y-2 md:gap-y-10 gap-x-12">
       {hourly?.map((d, i) => (
-        <div
+        <button
           className="flex flex-row items-center"
+          data-cy="hourly"
           key={i}
           onClick={() => setSelected(i)}
         >
@@ -30,7 +31,7 @@ const DateHourlyForecast: React.FC<DateHourlyForecastProps> = ({ hourly }) => {
           >
             {d}º
           </span>
-        </div>
+        </button>
       ))}
     </div>
   );
