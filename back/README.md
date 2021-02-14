@@ -22,6 +22,7 @@ Response example:
     "name": "Zaragoza",
     "slug": "zgz"
   },
+  {},
   {}
 ]
 ```
@@ -56,9 +57,9 @@ Endpoint examples:
 
 ##### POST /locations
 
-Insert a new location.
+Inserts a new location.
 
-Payloaod example:
+Payload example:
 
 ```json
 {
@@ -129,6 +130,7 @@ Endpoint examples:
 
 ```javascript
 /forecast?location=bcn
+/forecast?location=zgz
 ```
 
 > A location with the specified slug must already exist in the DB.
@@ -154,7 +156,7 @@ Endpoint examples:
 
 ##### POST /forecast
 
-Insert a new forecast.
+Inserts a new forecast.
 
 Payloaod example:
 
